@@ -1,10 +1,11 @@
 // Fix eslint shareable config (https://github.com/eslint/eslint/issues/3458)
-require('@rushstack/eslint-patch/modern-module-resolution');
+// require('@rushstack/eslint-patch/modern-module-resolution');
 const babelEslintPlugin = require('@babel/eslint-plugin');
 const babelParser = require('@babel/eslint-parser');
 const typescriptEslintPlugin = require('@typescript-eslint/eslint-plugin');
 const typescriptParser = require('@typescript-eslint/parser');
-const eslint = require('eslint/js');
+const eslint = require('@eslint/js');
+const babelPresetEnact = require('babel-preset-enact');
 const eslintPluginEnact = require('eslint-plugin-enact');
 const eslintPluginJest = require('eslint-plugin-jest');
 const eslintPluginJsxA11y = require('eslint-plugin-jsx-a11y');
@@ -28,10 +29,8 @@ const customTestsGlobals = {
 	$$: true
 };
 
-module.exports = [
+const config = [
 	eslint.configs.recommended,
-	eslintPluginReact.configs.recommended,
-	eslintPluginReactHooks.configs.recommended,
 	{
 		languageOptions: {
 			ecmaVersion: 'latest',
@@ -47,7 +46,7 @@ module.exports = [
 				},
 				requireConfigFile: false,
 				babelOptions: {
-					presets: ["babel-preset-enact"]
+					presets: [babelPresetEnact]
 				}
 			}
 		},
@@ -68,7 +67,8 @@ module.exports = [
 			'@stylistic/js': stylisticEslintPluginJs,
 			'jsx-a11y': eslintPluginJsxA11y,
 			react: eslintPluginReact,
-			enact: eslintPluginEnact
+			enact: eslintPluginEnact,
+			'react-hooks': eslintPluginReactHooks
 		},
 		settings: {
 			react: {
@@ -77,6 +77,8 @@ module.exports = [
 			}
 		},
 		rules: {
+			...eslintPluginReact.configs.recommended.rules,
+			...eslintPluginReactHooks.configs.recommended.rules,
 			'block-scoped-var': 'warn',
 			'curly': ['warn', 'multi-line'],
 			'eqeqeq': ['warn', 'smart'],
@@ -279,7 +281,7 @@ module.exports = [
 			jest: eslintPluginJest,
 			'testing-library': eslintPluginTestingLibrary
 		},
-		excludedFiles: ['tests/screenshot/**/*', 'tests/ui/**/*'],
+		ignores: ['tests/screenshot/**/*', 'tests/ui/**/*'],
 		languageOptions: {
 			globals: {
 				...globals.jest
@@ -335,3 +337,5 @@ module.exports = [
 		}
 	}
 ];
+
+module.exports =  {config};

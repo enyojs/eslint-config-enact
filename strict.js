@@ -3,7 +3,7 @@ const eslintPluginEnact = require('eslint-plugin-enact');
 const eslintPluginReact = require('eslint-plugin-react');
 const stylisticEslintPluginJs = require('@stylistic/eslint-plugin-js');
 
-import config from './index.js';
+const {config} = require('./index.js');
 
 module.exports = [
 	...config,
