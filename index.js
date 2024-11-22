@@ -24,20 +24,39 @@ const customGlobals = {
 };
 
 const customTestsGlobals = {
-	expect: true,
-	$: true,
-	$$: true
+	'browser': true,
+	'expect': true,
+	'$': true,
+	'$$': true
 };
 
-const config = [
+const basicConfig = [
 	eslint.configs.recommended,
+	{
+		ignores: [
+			'**/node_modules/',
+			'**/node_modules/*',
+			'**/build/',
+			'**/build/*',
+			'**/dist/',
+			'**/dist/*',
+			'**/coverage/',
+			'**/coverage/*',
+			'**/resources/',
+			'**/resources/*'
+		]
+	},
 	{
 		languageOptions: {
 			ecmaVersion: 'latest',
 			sourceType: 'module',
 			globals: {
+				...globals.es2015,
+				'shared-node-browser': true, // restrict to common globals to preserve isomorphic support
+				...globals.commonjs,
 				...customGlobals,
 				...globals.node
+
 			},
 			parser: babelParser,
 			parserOptions: {
@@ -50,18 +69,6 @@ const config = [
 				}
 			}
 		},
-		ignores: [
-			'/**/node_modules/',
-			'/**/node_modules/*',
-			'/**/build/',
-			'/**/build/*',
-			'/**/dist/',
-			'/**/dist/*',
-			'/**/coverage/',
-			'/**/coverage/*',
-			'/**/resources/',
-			'/**/resources/*'
-		],
 		plugins: {
 			'@babel': babelEslintPlugin,
 			'@stylistic/js': stylisticEslintPluginJs,
@@ -283,9 +290,7 @@ const config = [
 		},
 		ignores: ['tests/screenshot/**/*', 'tests/ui/**/*'],
 		languageOptions: {
-			globals: {
-				...globals.jest
-			}
+			globals: eslintPluginJest.environments.globals.globals,
 		},
 		rules: {
 			// Arrow functions can simplify tests
@@ -327,7 +332,6 @@ const config = [
 		languageOptions: {
 			globals: {
 				...customTestsGlobals,
-				...globals.browser,
 				...globals.mocha
 			}
 		},
@@ -338,4 +342,4 @@ const config = [
 	}
 ];
 
-module.exports =  {config};
+module.exports = basicConfig;

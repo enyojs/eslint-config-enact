@@ -3,10 +3,10 @@ const eslintPluginEnact = require('eslint-plugin-enact');
 const eslintPluginReact = require('eslint-plugin-react');
 const stylisticEslintPluginJs = require('@stylistic/eslint-plugin-js');
 
-const {config} = require('./index.js');
+const basicConfig = require('./index.js');
 
 module.exports = [
-	...config,
+	...basicConfig,
 	{
 		plugins: {
 			react: eslintPluginReact,
